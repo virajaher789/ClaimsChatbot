@@ -22,7 +22,16 @@ app.post('/claims', (req, res) => {
     customerName,
     incidentDate,
     estimatedCompletion: null,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    progress: [
+      {
+        id: 'submitted',
+        title: 'Claim Submitted',
+        status: 'completed',
+        date: new Date().toISOString(),
+        description: `Your claim has been received and assigned number ${claimNumber}`
+      }
+    ]
   };
 
   claims[claimNumber] = newClaim;
@@ -37,6 +46,31 @@ app.get('/claims/:claimNumber', (req, res) => {
   if (!claim) {
     return res.status(404).json({ error: 'Claim not found' });
   }
+  res.json(claim);
+});
+
+// Update claim status
+app.put('/claims/:claimNumber/status', (req, res) => {
+  const { claimNumber } = req.params;
+  const { status, description, estimatedCompletion } = req.body;
+  if (!status) {
+    return res.status(400).json({ error: 'status is required' });
+  }
+  const claim = claims[claimNumber];
+  if (!claim) {
+    return res.status(404).json({ error: 'Claim not found' });
+  }
+  claim.status = status;
+  if (estimatedCompletion) {
+    claim.estimatedCompletion = estimatedCompletion;
+  }
+  claim.progress.push({
+    id: status,
+    title: status,
+    status: 'completed',
+    date: new Date().toISOString(),
+    description: description || ''
+  });
   res.json(claim);
 });
 

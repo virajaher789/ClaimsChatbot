@@ -15,6 +15,7 @@ test('POST /claims creates a claim', async () => {
 
   assert.match(response.body.claimNumber, /^CLM/);
   assert.equal(response.body.status, 'submitted');
+  assert.equal(response.body.progress.length, 1);
 });
 
 test('GET /claims/:claimNumber retrieves a claim', async () => {
@@ -30,4 +31,33 @@ test('GET /claims/:claimNumber retrieves a claim', async () => {
 
 test('POST /claims validates required fields', async () => {
   await request(app).post('/claims').send({}).expect(400);
+});
+
+test('PUT /claims/:claimNumber/status updates a claim status', async () => {
+  const postRes = await request(app)
+    .post('/claims')
+    .send({ type: 'motor', customerName: 'Mark', incidentDate: '2025-01-20' })
+    .expect(201);
+
+  const { claimNumber } = postRes.body;
+  const putRes = await request(app)
+    .put(`/claims/${claimNumber}/status`)
+    .send({ status: 'initial_review', description: 'Claim under review', estimatedCompletion: '2025-03-01' })
+    .expect(200);
+
+  assert.equal(putRes.body.status, 'initial_review');
+  assert.equal(putRes.body.progress.length, 2);
+});
+
+test('PUT /claims/:claimNumber/status requires status field', async () => {
+  const postRes = await request(app)
+    .post('/claims')
+    .send({ type: 'health', customerName: 'Maya', incidentDate: '2025-01-10' })
+    .expect(201);
+
+  const { claimNumber } = postRes.body;
+  await request(app)
+    .put(`/claims/${claimNumber}/status`)
+    .send({})
+    .expect(400);
 });
