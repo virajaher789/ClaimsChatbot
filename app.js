@@ -2,8 +2,6 @@ const express = require('express');
 const { generateClaimNumber } = require('./utils');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
 app.use(express.json());
 
 // In-memory claim store
@@ -42,6 +40,10 @@ app.get('/claims/:claimNumber', (req, res) => {
   res.json(claim);
 });
 
-app.listen(PORT, () => {
-  console.log(`ClaimsCompanion API running on port ${PORT}`);
-});
+function resetClaims() {
+  for (const key of Object.keys(claims)) {
+    delete claims[key];
+  }
+}
+
+module.exports = { app, resetClaims };

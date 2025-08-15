@@ -2,9 +2,9 @@
   "name": "claimschatbot",
   "version": "1.0.0",
   "description": "ClaimsCompanion MVP - Complete Development Instructions PROJECT OVERVIEW",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "node --test"
   },
   "keywords": [],
@@ -14,5 +14,8 @@
   "dependencies": {
     "express": "^5.1.0",
     "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^6.3.3"
   }
 }
