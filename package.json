@@ -1,0 +1,21 @@
+{
+  "name": "claimschatbot",
+  "version": "1.0.0",
+  "description": "ClaimsCompanion MVP - Complete Development Instructions PROJECT OVERVIEW",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^6.3.3"
+  }
+}
